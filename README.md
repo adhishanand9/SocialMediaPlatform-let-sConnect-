@@ -1,1 +1,1 @@
-# SocialMediaPlatform-let-sConnect-
+# SocialMediaPlatform
