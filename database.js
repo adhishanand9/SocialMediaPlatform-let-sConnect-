@@ -15,6 +15,7 @@ mongoose.connect("mongodb://localhost:27017/social")
 .catch(
     (err)=>{
         console.log("Database connection error",err)
+        // add update
     }
 )
 
