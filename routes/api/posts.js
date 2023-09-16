@@ -27,6 +27,11 @@ router.get("/:id", async (req, res, next) => {
     results.replyTo = postData.replyTo;
   }
 
+  if(searchObj.search !== undefined) {
+    searchObj.content = { $regex: searchObj.search, $options: "i" };
+    delete searchObj.search;
+}
+
   results.replies = await getPosts({replyTo:postId})
     res.status(200).send(results);
 })

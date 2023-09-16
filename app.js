@@ -25,10 +25,12 @@ app.use(session({
 const loginRoute = require('./routes/loginRoutes');
 const registerRoute = require('./routes/registerRoutes');
 const logoutRoute = require("./routes/logout")
+const searchRoute = require("./routes/searchRoutes");
 
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
 app.use("/logout",logoutRoute)
+app.use("/search",middleware.requireLogin,searchRoute);
 
 app.get("/", middleware.requireLogin, (req, res, next) => {
 
