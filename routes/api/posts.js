@@ -8,7 +8,17 @@ const Post = require('../../schemas/PostSchema');
 app.use(bodyParser.urlencoded({ extended: false }));
 
 router.get("/", async (req, res, next) => {
-    var results = await getPosts({});
+
+    var searchObj = req.query;
+    
+    if(searchObj.isReply !== undefined) {
+        var isReply = searchObj.isReply == "true";
+        searchObj.replyTo = { $exists: isReply };
+        delete searchObj.isReply;
+        console.log(searchObj)
+    }
+
+    var results = await getPosts(searchObj);
     res.status(200).send(results);
 })
 
@@ -18,21 +28,17 @@ router.get("/:id", async (req, res, next) => {
 
     var postData = await getPosts({ _id: postId });
     postData = postData[0];
+
     var results = {
-        postData:postData
+        postData: postData
     }
 
-  if(postData.replyTo !== undefined)
-  {
-    results.replyTo = postData.replyTo;
-  }
+    if(postData.replyTo !== undefined) {
+        results.replyTo = postData.replyTo;
+    }
 
-  if(searchObj.search !== undefined) {
-    searchObj.content = { $regex: searchObj.search, $options: "i" };
-    delete searchObj.search;
-}
+    results.replies = await getPosts({ replyTo: postId });
 
-  results.replies = await getPosts({replyTo:postId})
     res.status(200).send(results);
 })
 
@@ -132,7 +138,6 @@ router.post("/:id/retweet", async (req, res, next) => {
     res.status(200).send(post)
 })
 
-
 router.delete("/:id", (req, res, next) => {
     Post.findByIdAndDelete(req.params.id)
     .then(() => res.sendStatus(202))
@@ -141,7 +146,6 @@ router.delete("/:id", (req, res, next) => {
         res.sendStatus(400);
     })
 })
-
 
 async function getPosts(filter) {
     var results = await Post.find(filter)

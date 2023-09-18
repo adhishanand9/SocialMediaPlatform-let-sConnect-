@@ -58,7 +58,6 @@ $("#replyModal").on("show.bs.modal", (event) => {
 
 $("#replyModal").on("hidden.bs.modal", () => $("#originalPostContainer").html(""));
 
-
 $("#deletePostModal").on("show.bs.modal", (event) => {
     var button = $(event.relatedTarget);
     var postId = getPostIdFromElement(button);
@@ -71,7 +70,13 @@ $("#deletePostButton").click((event) => {
     $.ajax({
         url: `/api/posts/${postId}`,
         type: "DELETE",
-        success: () => {
+        success: (data, status, xhr) => {
+
+            if(xhr.status != 202) {
+                alert("could not delete post");
+                return;
+            }
+            
             location.reload();
         }
     })
@@ -175,7 +180,7 @@ function createPostHtml(postData, largeFont = false) {
     }
 
     var replyFlag = "";
-    if(postData.replyTo) {
+    if(postData.replyTo && postData.replyTo._id) {
         
         if(!postData.replyTo._id) {
             return alert("Reply to is not populated");
@@ -190,6 +195,7 @@ function createPostHtml(postData, largeFont = false) {
                     </div>`;
 
     }
+
     var buttons = "";
     if (postData.postedBy._id == userLoggedIn._id) {
         buttons = `<button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"><i class='fas fa-times'></i></button>`;
@@ -220,14 +226,14 @@ function createPostHtml(postData, largeFont = false) {
                                     <i class='far fa-comment'></i>
                                 </button>
                             </div>
-                            <div class='postButtonContainer '>
-                                <button class='retweetButton ${retweetButtonActiveClass}'>
+                            <div class='postButtonContainer green'>
+                                <button class='retweetButton '>
                                     <i class='fas fa-retweet'></i>
                                     <span>${postData.retweetUsers.length || ""}</span>
                                 </button>
                             </div>
                             <div class='postButtonContainer '>
-                                <button class='likeButton ${likeButtonActiveClass}'>
+                                <button class='likeButton '>
                                     <i class='far fa-heart'></i>
                                     <span>${postData.likes.length || ""}</span>
                                 </button>
@@ -300,7 +306,7 @@ function outputPostsWithReplies(results, container) {
         container.append(html);
     }
 
-    var mainPostHtml = createPostHtml(results.postData,true)
+    var mainPostHtml = createPostHtml(results.postData, true)
     container.append(mainPostHtml);
 
     results.replies.forEach(result => {
