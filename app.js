@@ -25,21 +25,22 @@ app.use(session({
 const loginRoute = require('./routes/loginRoutes');
 const registerRoute = require('./routes/registerRoutes');
 const logoutRoute = require("./routes/logout")
+const userAppiRoute = require('./routes/api/users')
+const searchRoute = require("./routes/searchRoutes");
 const postRoute = require("./routes/postRoutes")
 const profileRoute = require("./routes/profileRoutes")
 
 // Api routes
 const postsApiRoute = require('./routes/api/posts');
-const userAppiRoute = require('./routes/api/users')
-
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
 app.use("/logout",logoutRoute)
-
-app.use("/posts",middleware.requireLogin,postRoute)
-app.use("/api/posts", postsApiRoute);
 app.use("/api/users",userAppiRoute);
+app.use("/api/posts", postsApiRoute);
+app.use("/posts",middleware.requireLogin,postRoute)
 app.use("/profile",middleware.requireLogin,profileRoute)
+app.use("/search",middleware.requireLogin,searchRoute);
+
 app.get("/", middleware.requireLogin, (req, res, next) => {
 
     var payload = {
