@@ -15,12 +15,16 @@ router.get("/", async (req, res, next) => {
         var isReply = searchObj.isReply == "true";
         searchObj.replyTo = { $exists: isReply };
         delete searchObj.isReply;
-        console.log(searchObj)
     }
 
-    if(searchObj.follwingOnly !== undefined)
-    {
-        var followingOnly = searchObj.followingOnly='true'
+    if(searchObj.search !== undefined) {
+        searchObj.content = { $regex: searchObj.search, $options: "i" };
+        delete searchObj.search;
+    }
+
+    if(searchObj.followingOnly !== undefined) {
+        var followingOnly = searchObj.followingOnly == "true";
+
         if(followingOnly) {
             var objectIds = [];
             
@@ -37,7 +41,6 @@ router.get("/", async (req, res, next) => {
         }
         
         delete searchObj.followingOnly;
-
     }
 
     var results = await getPosts(searchObj);
