@@ -1,3 +1,6 @@
+// Globals
+var cropper;
+
 $("#postTextarea, #replyTextarea").keyup(event => {
     var textbox = $(event.target);
     var value = textbox.val().trim();
@@ -79,6 +82,97 @@ $("#deletePostButton").click((event) => {
             
             location.reload();
         }
+    })
+})
+
+$("#filePhoto").change(function(){    
+    if(this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (e) => {
+            var image = document.getElementById("imagePreview");
+            image.src = e.target.result;
+
+            if(cropper !== undefined) {
+                cropper.destroy();
+            }
+
+            cropper = new Cropper(image, {
+                aspectRatio: 1 / 1,
+                background: false
+            });
+
+        }
+        reader.readAsDataURL(this.files[0]);
+    }
+    else {
+        console.log("nope")
+    }
+})
+
+$("#coverPhoto").change(function(){    
+    if(this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (e) => {
+            var image = document.getElementById("coverPreview");
+            image.src = e.target.result;
+
+            if(cropper !== undefined) {
+                cropper.destroy();
+            }
+
+            cropper = new Cropper(image, {
+                aspectRatio: 16 / 9,
+                background: false
+            });
+
+        }
+        reader.readAsDataURL(this.files[0]);
+    }
+})
+
+$("#imageUploadButton").click(() => {
+    var canvas = cropper.getCroppedCanvas();
+
+    if(canvas == null) {
+        alert("Could not upload image. Make sure it is an image file.");
+        return;
+    }
+
+    canvas.toBlob((blob) => {
+        var formData = new FormData();
+        formData.append("croppedImage", blob);
+
+        $.ajax({
+            url: "/api/users/profilePicture",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: () => location.reload()
+        })
+    })
+})
+
+$("#coverPhotoButton").click(() => {
+    var canvas = cropper.getCroppedCanvas();
+
+    if(canvas == null) {
+        alert("Could not upload image. Make sure it is an image file.");
+        return;
+    }
+
+    canvas.toBlob((blob) => {
+        var formData = new FormData();
+        formData.append("croppedImage", blob);
+
+        $.ajax({
+            url: "/api/users/coverPhoto",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: () => location.reload()
+        })
     })
 })
 
@@ -175,9 +269,6 @@ $(document).on("click", ".followButton", (e) => {
     })
 });
 
-
-
-
 function getPostIdFromElement(element) {
     var isRoot = element.hasClass("post");
     var rootElement = isRoot == true ? element : element.closest(".post");
@@ -264,14 +355,14 @@ function createPostHtml(postData, largeFont = false) {
                                     <i class='far fa-comment'></i>
                                 </button>
                             </div>
-                            <div class='postButtonContainer'>
-                                <button class='retweetButton '>
+                            <div class='postButtonContainer green'>
+                                <button class='retweetButton ${retweetButtonActiveClass}'>
                                     <i class='fas fa-retweet'></i>
                                     <span>${postData.retweetUsers.length || ""}</span>
                                 </button>
                             </div>
-                            <div class='postButtonContainer '>
-                                <button class='likeButton '>
+                            <div class='postButtonContainer red'>
+                                <button class='likeButton ${likeButtonActiveClass}'>
                                     <i class='far fa-heart'></i>
                                     <span>${postData.likes.length || ""}</span>
                                 </button>
