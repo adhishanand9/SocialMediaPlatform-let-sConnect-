@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 5000;
+const port = 3000;
 const middleware = require('./middleware')
 const path = require('path')
 const bodyParser = require("body-parser")
@@ -24,22 +24,22 @@ app.use(session({
 // Routes
 const loginRoute = require('./routes/loginRoutes');
 const registerRoute = require('./routes/registerRoutes');
-const logoutRoute = require("./routes/logout")
-const userAppiRoute = require('./routes/api/users')
-const searchRoute = require("./routes/searchRoutes");
-const postRoute = require("./routes/postRoutes")
-const profileRoute = require("./routes/profileRoutes")
+const postRoute = require('./routes/postRoutes');
+const profileRoute = require('./routes/profileRoutes');
+const uploadRoute = require('./routes/uploadRoutes');
 
 // Api routes
 const postsApiRoute = require('./routes/api/posts');
+const usersApiRoute = require('./routes/api/users');
+
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
-app.use("/logout",logoutRoute)
-app.use("/api/users",userAppiRoute);
+app.use("/posts", middleware.requireLogin, postRoute);
+app.use("/profile", middleware.requireLogin, profileRoute);
+app.use("/uploads", uploadRoute);
+
 app.use("/api/posts", postsApiRoute);
-app.use("/posts",middleware.requireLogin,postRoute)
-app.use("/profile",middleware.requireLogin,profileRoute)
-app.use("/search",middleware.requireLogin,searchRoute);
+app.use("/api/users", usersApiRoute);
 
 app.get("/", middleware.requireLogin, (req, res, next) => {
 
