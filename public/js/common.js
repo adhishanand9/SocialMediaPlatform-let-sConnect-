@@ -3,6 +3,11 @@ var cropper;
 var timer;
 var selectedUsers = [];
 
+$(document).ready(() => {
+    refreshMessagesBadge();
+    refreshNotificationsBadge();
+})
+
 $("#postTextarea, #replyTextarea").keyup(event => {
     var textbox = $(event.target);
     var value = textbox.val().trim();
@@ -363,6 +368,17 @@ $(document).on("click", ".followButton", (e) => {
     })
 });
 
+$(document).on("click", ".notification.active", (e) => {
+    var container = $(e.target);
+    var notificationId = container.data().id;
+
+    var href = container.attr("href");
+    e.preventDefault();
+
+    var callback = () => window.location = href;
+    markNotificationsAsOpened(notificationId, callback);
+})
+
 function getPostIdFromElement(element) {
     var isRoot = element.hasClass("post");
     var rootElement = isRoot == true ? element : element.closest(".post");
@@ -664,4 +680,47 @@ function messageReceived(newMessage) {
     else {
         addChatMessageHtml(newMessage);
     }
+
+    refreshMessagesBadge()
+}
+
+function markNotificationsAsOpened(notificationId = null, callback = null) {
+    if(callback == null) callback = () => location.reload();
+
+    var url = notificationId != null ? `/api/notifications/${notificationId}/markAsOpened` : `/api/notifications/markAsOpened`;
+    $.ajax({
+        url: url,
+        type: "PUT",
+        success: () => callback()
+    })
+}
+
+function refreshMessagesBadge() {
+    $.get("/api/chats", { unreadOnly: true }, (data) => {
+        
+        var numResults = data.length;
+
+        if(numResults > 0) {
+            $("#messagesBadge").text(numResults).addClass("active");
+        }
+        else {
+            $("#messagesBadge").text("").removeClass("active");
+        }
+
+    })
+}
+
+function refreshNotificationsBadge() {
+    $.get("/api/notifications", { unreadOnly: true }, (data) => {
+        
+        var numResults = data.length;
+
+        if(numResults > 0) {
+            $("#notificationBadge").text(numResults).addClass("active");
+        }
+        else {
+            $("#notificationBadge").text("").removeClass("active");
+        }
+
+    })
 }
