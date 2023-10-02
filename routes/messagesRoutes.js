@@ -87,4 +87,5 @@ function getChatByUserId(userLoggedInId, otherUserId) {
     .populate("users");
 }
 
+
 module.exports = router;
