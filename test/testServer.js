@@ -1,10 +1,8 @@
 const {expect} = require("chai")
 const request = require("request")
 
-
 describe("register testing", function() {
-    it('returns status code of 201', function(done) {
-     
+    it('returns status code of 201', function(done) {    
   const Data = {
       "firstname":"darsh",
       "lastname": "patel",
@@ -12,12 +10,10 @@ describe("register testing", function() {
       "username": "darshp",
       "password": "d@123",
      }; 
-  
       request.post(
         {
           url: 'http://localhost:5000/',
           json: Data
-         
         },
         done()
       );
@@ -27,7 +23,7 @@ describe("register testing", function() {
   
 describe("login testing", function() {
     it('returns status code of 201', function(done) {
-     
+   
   const Data = {
       "email": "darshp",
       "password": "d@123",
@@ -36,7 +32,6 @@ describe("login testing", function() {
         {
           url: 'http://localhost:5000/login',
           json: Data
-         
         },
         done()
       );
@@ -55,7 +50,6 @@ describe("post reply testing", function() {
         {
           url: 'http://localhost:5000/api/posts',
           json: Data
-         
         },
         done()
       );
