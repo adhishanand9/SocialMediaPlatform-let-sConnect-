@@ -136,8 +136,7 @@ describe("retweet post testing", function() {
       request.get(
         {
           url: 'http://localhost:5000/:userId/follow',
-          json: Data
-         
+          json: Data  
         },
         done()
       );
