@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --reporter spec",
     "start": "nodemon app.js"
   },
   "author": "",
@@ -12,11 +12,14 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "chai": "^4.3.10",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "mocha": "^10.2.0",
     "mongodb": "^4.4.1",
     "mongoose": "^7.5.0",
     "nodemon": "^3.0.1",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "request": "^2.88.2"
   }
 }
