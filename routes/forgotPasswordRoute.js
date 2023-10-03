@@ -20,8 +20,14 @@ router.post("/", async (req, res, next) => {
 
         if (user != null) {
             // Generate a unique reset token
-            const token = jwt.sign({ email: user.email }, 'your-secret-key', { expiresIn: '1h' });
+            const token = jwt.sign({ email: user.email }, '74321234', { expiresIn: '2h' });
+            //console.log(token);
+            // Store the reset token and its expiration date in the user's document
+            user.resetToken = token;
+            user.resetTokenExpiry = Date.now() + 2 * 60 * 60 * 1000; // 2 hours
 
+            // Save the updated user document
+            await user.save();
             // Create a transporter for sending email
             const transporter = nodemailer.createTransport({
                 // Configure your email service here
@@ -39,7 +45,7 @@ router.post("/", async (req, res, next) => {
                 from: 'adhishanand9@gmail.com',
                 to: user.email,
                 subject: 'Reset Your Password',
-                html: `<p>Click the following link to reset your password: <a href="http://localhost:3000/reset-password/${token}">Reset Password</a></p>`,
+                html: `<p>Click the following link to reset your password: <a href="http://localhost:3003/reset-password/${token}">Reset Password</a></p>`,
             };
 
             await transporter.sendMail(mailOptions);
