@@ -1,0 +1,24 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'australia-southeast2-docker.pkg.dev/$PROJECT_ID/sit725/socialmedia:adhishanand', '.']
+- name: 'node:alpine'
+  entrypoint: 'ash'
+  args:
+    - '-c'
+    - |
+      # Install dependencies
+      npm install
+      # Run tests
+      npm test
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push Image to Artifact Registry'
+  args:
+    - 'push'
+    - 'australia-southeast2-docker.pkg.dev/$PROJECT_ID/sit725/socialmedia:adhishanand'
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - builds
+  - triggers
+  - run
+  - cdtrigger
+  - --branch=main
