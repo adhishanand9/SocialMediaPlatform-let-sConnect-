@@ -39,6 +39,8 @@ router.post('/:token', async (req, res, next) => {
             resetTokenExpiry: { $gt: Date.now() }
         });
 
+        //console.log(user);
+
         if (!user) {
             return res.status(400).render('resetPassword', {
                 token,
