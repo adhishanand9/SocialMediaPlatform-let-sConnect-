@@ -23,7 +23,6 @@ describe("register testing", function() {
   
 describe("login testing", function() {
     it('returns status code of 201', function(done) {
-   
   const Data = {
       "email": "darshp",
       "password": "d@123",
@@ -41,8 +40,7 @@ describe("login testing", function() {
 
    
 describe("post reply testing", function() {
-    it('returns status code of 201', function(done) {
-     
+    it('returns status code of 201', function(done) { 
   const Data = {
       "postReply": "Yes How are you",
      }; 
@@ -62,7 +60,6 @@ describe("post reply testing", function() {
 describe("delete post Test", function() {
     it('returns status code of 200', function(done) {
       const postId = '1'; 
-  
       request.delete(
         {
           url: 'http://localhost:5000/api/posts/${postId}'
@@ -76,7 +73,6 @@ describe("delete post Test", function() {
 
 describe("retweet post testing", function() {
     it('returns status code of 201', function(done) {
-     
   const Data = {
       "postID": "1",
      }; 
@@ -84,7 +80,6 @@ describe("retweet post testing", function() {
         {
           url: 'http://localhost:5000/api/posts/${postId}/retweet',
           json: Data
-         
         },
         done()
       );
@@ -100,8 +95,7 @@ describe("retweet post testing", function() {
       request.put(
         {
           url: 'http://localhost:5000/:userId/follow',
-          json: Data
-         
+          json: Data   
         },
         done()
       );
@@ -119,7 +113,6 @@ describe("retweet post testing", function() {
         {
           url: 'http://localhost:5000/:userId/followers',
           json: Data
-         
         },
         done()
       );
@@ -129,7 +122,6 @@ describe("retweet post testing", function() {
    
   describe("get followers testing", function() {
     it('returns status code of 201', function(done) {
-     
   const Data = {
       "userID": "1",
      }; 
