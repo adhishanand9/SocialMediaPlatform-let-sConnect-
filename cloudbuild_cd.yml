@@ -1,0 +1,8 @@
+steps:
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=deploy.yml
+  - --image=australia-southeast2-docker.pkg.dev/$PROJECT_ID/sit725/socialmedia:adhishanand
+  - --location=${_CLOUDSDK_COMPUTE_REGION}
+  - --cluster=${_CLOUDSDK_CONTAINER_CLUSTER}
