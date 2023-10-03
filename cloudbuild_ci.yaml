@@ -20,5 +20,5 @@ steps:
   - builds
   - triggers
   - run
-  - cdtrigger
+  - Social-Media-Deploy
   - --branch=main
