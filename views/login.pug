@@ -3,6 +3,14 @@ extends layouts/login-layout.pug
 block content
     .loginContainer
         h1 Login
+        //- Add JavaScript to check for the query parameter and display an alert
+        script.
+            if (window.location.search.includes("mailSuccess=true")) {
+                alert("Email sent successfully. Please check your inbox for a reset link.");
+            }
+            else if (window.location.search.includes("reset=success")) {
+                alert("Password has been changed successfully. Please use the new password.");
+            }
         form(method="post")
 
             p.errorMessage #{errorMessage}

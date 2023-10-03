@@ -49,8 +49,8 @@ router.post("/", async (req, res, next) => {
             };
 
             await transporter.sendMail(mailOptions);
-            return res.status(200).render("login", payload);
-           // return res.status(200).json({ message: 'Password reset email sent.' });
+            // Render the "Forgot Password" page with a success message
+            return res.redirect("/login?mailSuccess=true");
         }
     }
 
